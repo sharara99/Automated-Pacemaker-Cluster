@@ -56,5 +56,5 @@ Both methods provide the same end result but cater to different preferences: man
 
 ## 🔗 Links to Resources
 
-- **Manual Setup Documentation**: [Manual Setup Guide](manual-setup-link)
-- **Automated Setup with Ansible**: [Automated Setup Guide](automated-setup-link)
+- **Manual Setup Documentation**: [Manual Setup Guide](https://shard-knee-e78.notion.site/Pacemaker-Cluster-HA-Web-App-Project-1b188e9cf72c80e391e8e3fa6222c319?pvs=4)
+- **Automated Setup with Ansible**: [Automated Setup Guide](https://shard-knee-e78.notion.site/Automated-Pacemaker-Cluster-1dc88e9cf72c803cb88fcf514eb2cd65?pvs=4)
