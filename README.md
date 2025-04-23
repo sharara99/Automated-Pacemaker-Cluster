@@ -1,5 +1,11 @@
 # 🛠️ High Availability Web Cluster with Pacemaker, Corosync, Apache, iSCSI, and SBD
 
+
+## 🧠 Architecture Diagram
+
+![Automated Photo](Animation.gif)
+
+
 ## 📘 Overview
 
 This project presents a **fully configured High Availability (HA) Web Cluster** built using enterprise-level open-source tools on three CentOS VMs: `serverA`, `serverB`, and `serverC`. The cluster ensures **continuous service availability**, **automated failover**, and **node fencing** using **SBD (Storage-Based Death)**.
@@ -37,7 +43,3 @@ It showcases how to:
 - ✅ **Auto Failover**: Automatically relocate VIP and Apache to a healthy node on failure.
 
 ---
-
-## 🧠 Architecture Diagram
-
-![Automated Photo](Animation.gif)
