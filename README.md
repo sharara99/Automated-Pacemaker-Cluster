@@ -46,9 +46,9 @@ It showcases how to:
 
 This project can be set up in **two different methods**:
 
-1. **Manual Setup**: This approach involves manually configuring each component of the High Availability Cluster on the CentOS VMs. You can follow the step-by-step instructions in the documentation [here](manual-setup-link) to achieve the desired HA setup.
+1. **Manual Setup**: This approach involves manually configuring each component of the High Availability Cluster on the CentOS VMs. You can follow the step-by-step instructions in the documentation [here]([manual-setup-link](https://shard-knee-e78.notion.site/Pacemaker-Cluster-HA-Web-App-Project-1b188e9cf72c80e391e8e3fa6222c319?pvs=4)) to achieve the desired HA setup.
 
-2. **Automated Setup with Ansible**: This approach automates the entire setup process using Ansible playbooks. If you prefer to automate the configuration, you can use the [automated setup documentation](automated-setup-link) to get the cluster up and running with just a few commands.
+2. **Automated Setup with Ansible**: This approach automates the entire setup process using Ansible playbooks. If you prefer to automate the configuration, you can use the [automated setup documentation]([automated-setup-link](https://shard-knee-e78.notion.site/Automated-Pacemaker-Cluster-1dc88e9cf72c803cb88fcf514eb2cd65?pvs=4)) to get the cluster up and running with just a few commands.
 
 Both methods provide the same end result but cater to different preferences: manual control vs automation.
 
