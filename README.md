@@ -1,10 +1,8 @@
 # 🛠️ High Availability Web Cluster with Pacemaker
 
-
 ## 🧠 Architecture Diagram
 
 ![Automated Photo](Animation.gif)
-
 
 ## 📘 Overview
 
@@ -43,3 +41,20 @@ It showcases how to:
 - ✅ **Auto Failover**: Automatically relocate VIP and Apache to a healthy node on failure.
 
 ---
+
+## 📝 Documentation
+
+This project can be set up in **two different methods**:
+
+1. **Manual Setup**: This approach involves manually configuring each component of the High Availability Cluster on the CentOS VMs. You can follow the step-by-step instructions in the documentation [here](manual-setup-link) to achieve the desired HA setup.
+
+2. **Automated Setup with Ansible**: This approach automates the entire setup process using Ansible playbooks. If you prefer to automate the configuration, you can use the [automated setup documentation](automated-setup-link) to get the cluster up and running with just a few commands.
+
+Both methods provide the same end result but cater to different preferences: manual control vs automation.
+
+---
+
+## 🔗 Links to Resources
+
+- **Manual Setup Documentation**: [Manual Setup Guide](manual-setup-link)
+- **Automated Setup with Ansible**: [Automated Setup Guide](automated-setup-link)
