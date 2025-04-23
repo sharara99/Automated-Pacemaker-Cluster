@@ -40,4 +40,4 @@ It showcases how to:
 
 ## 🧠 Architecture Diagram
 
-![Animation.gif](attachment:d0e05b12-0964-480b-ab7c-2d9fc13f0df3:Animation.gif)
+![Automated Photo](Animation.gif)
