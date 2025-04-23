@@ -1,0 +1,6 @@
+---
+- name: Configure Pacemaker HA Cluster
+  hosts: all_servers
+  become: yes
+  roles:
+    - role: ./roles/pacemaker_cluster

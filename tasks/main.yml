@@ -1,0 +1,12 @@
+---
+- name: Include common tasks for all nodes
+  include_tasks: common_tasks.yml
+
+- name: Include serverA specific tasks
+  include_tasks: servera_tasks.yml
+  when: inventory_hostname == 'servera'
+
+- name: Include cluster setup tasks (run once)
+  include_tasks: cluster_setup.yml
+  when: inventory_hostname == 'servera'
+  run_once: true

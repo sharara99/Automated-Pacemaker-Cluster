@@ -1,0 +1,55 @@
+---
+- name: Authenticate cluster nodes
+  command: pcs host auth servera serverb serverc -u hacluster -p 'p@ssword'
+  register: pcs_auth
+  changed_when: "'already authenticated' not in pcs_auth.stdout"
+
+- name: Create the cluster
+  command: pcs cluster setup mycluster servera serverb serverc --force
+  register: cluster_setup
+  changed_when: "'already configured' not in cluster_setup.stderr"
+
+- name: Start cluster on all nodes
+  command: pcs cluster start --all
+  register: cluster_start
+  changed_when: "'already running' not in cluster_start.stdout"
+
+- name: Enable cluster on all nodes
+  command: pcs cluster enable --all
+  register: cluster_enable
+  changed_when: "'already enabled' not in cluster_enable.stdout"
+
+- name: Partition the shared disk (run once)
+  parted:
+    device: /dev/sdb
+    number: 1
+    flags: [ lvm ]
+    state: present
+    part_end: 100%
+
+- name: Create STONITH resource
+  command: |
+    pcs stonith create sbd-fence fence_sbd devices="/dev/sdb1" op monitor interval=60s
+    pcs property set stonith-enabled=true
+  register: stonith_create
+  changed_when: "'already exists' not in stonith_create.stdout"
+
+- name: Create Virtual IP resource
+  command: pcs resource create Cluster-VIP ocf:heartbeat:IPaddr2 ip=192.168.2.100 cidr_netmask=24 op monitor interval=30s
+  register: vip_create
+  changed_when: "'already exists' not in vip_create.stdout"
+
+- name: Create WebServer resource
+  command: pcs resource create WebServer systemd:httpd op monitor interval=30s
+  register: webserver_create
+  changed_when: "'already exists' not in webserver_create.stdout"
+
+- name: Configure colocation constraint
+  command: pcs constraint colocation add WebServer with Cluster-VIP INFINITY
+  register: colocation_set
+  changed_when: "'already exists' not in colocation_set.stdout"
+
+- name: Configure order constraint
+  command: pcs constraint order Cluster-VIP then WebServer
+  register: order_set
+  changed_when: "'already exists' not in order_set.stdout"

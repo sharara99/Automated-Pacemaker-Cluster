@@ -1,0 +1,102 @@
+---
+- name: Check SELinux status and set to permissive
+  selinux:
+    state: permissive
+    policy: targeted
+
+- name: Disable and stop firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: Enable HA repository
+  command: yum config-manager --enable highavailability
+  args:
+    creates: /etc/yum.repos.d/highavailability.repo  # This checks if the repo is already enabled
+
+- name: Install required packages
+  yum:
+    name:
+      - pcs
+      - pacemaker
+      - corosync
+      - fence-agents-all
+      - sbd
+    state: present
+
+- name: Enable and start pcsd service
+  service:
+    name: pcsd
+    state: started
+    enabled: yes
+
+- name: Set hacluster password
+  user:
+    name: hacluster
+    password: "{{ 'p@ssword' | password_hash('sha512') }}"
+
+- name: Install iscsi-initiator-utils
+  yum:
+    name: iscsi-initiator-utils
+    state: present
+
+- name: Configure iSCSI initiator name
+  template:
+    src: initiatorname.iscsi.j2
+    dest: /etc/iscsi/initiatorname.iscsi
+  notify: restart iscsid
+
+- name: Discover iSCSI target
+  command: iscsiadm -m discovery -t sendtargets -p 192.168.2.11
+  register: iscsi_discovery
+  changed_when: "'192.168.2.11' not in iscsi_discovery.stdout"
+
+- name: Login to iSCSI target
+  command: iscsiadm -m node --login
+  register: iscsi_login
+  changed_when: "'successful' not in iscsi_login.stdout"
+
+- name: Install watchdog
+  yum:
+    name: watchdog
+    state: present
+
+- name: Configure watchdog
+  lineinfile:
+    path: /etc/modules-load.d/watchdog.conf
+    line: softdog
+    create: yes
+
+- name: Enable and start watchdog
+  service:
+    name: watchdog
+    state: started
+    enabled: yes
+
+- name: Install Apache and PHP
+  yum:
+    name:
+      - httpd
+      - php
+    state: present
+
+- name: Ensure httpd is stopped (managed by cluster)
+  service:
+    name: httpd
+    state: stopped
+    enabled: no
+
+- name: Configure SBD device
+  template:
+    src: sbd_config.j2
+    dest: /etc/sysconfig/sbd
+  notify: enable sbd
+
+- name: Mount NFS share (serverB and serverC only)
+  mount:
+    path: /var/www/html
+    src: "192.168.2.11:/var/www/html"
+    fstype: nfs
+    state: mounted
+  when: inventory_hostname != 'servera'

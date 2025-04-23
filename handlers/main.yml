@@ -1,0 +1,11 @@
+---
+- name: restart iscsid
+  service:
+    name: iscsid
+    state: restarted
+
+- name: enable sbd
+  service:
+    name: sbd
+    state: started
+    enabled: yes

@@ -1,0 +1,10 @@
+[cluster_nodes]
+servera
+serverb
+serverc
+
+[servera]
+servera
+
+[all_servers:children]
+cluster_nodes

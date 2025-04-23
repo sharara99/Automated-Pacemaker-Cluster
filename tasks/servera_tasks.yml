@@ -1,0 +1,80 @@
+---
+- name: Install targetcli
+  yum:
+    name: targetcli
+    state: present
+
+- name: Create iSCSI disk image
+  command: truncate -s 5G /var/lib/iscsi_disks/disk01.img
+  args:
+    creates: /var/lib/iscsi_disks/disk01.img
+
+- name: Configure iSCSI target
+  command: |
+    targetcli <<EOF
+    /backstores/fileio create disk01 /var/lib/iscsi_disks/disk01.img 5G
+    /iscsi create iqn.2025-04.local.servera:target01
+    /iscsi/iqn.2025-04.local.servera:target01/tpg1/luns create /backstores/fileio/disk01
+    /iscsi/iqn.2025-04.local.servera:target01/tpg1/portals create 0.0.0.0 3260
+    cd /iscsi/iqn.2025-04.local.servera:target01/tpg1/acls
+    create iqn.2025-04.local.cluster:servera
+    create iqn.2025-04.local.cluster:serverb
+    create iqn.2025-04.local.cluster:serverc
+    cd /
+    saveconfig
+    exit
+    EOF
+  args:
+    warn: false
+
+- name: Open iSCSI port in firewall
+  firewalld:
+    port: 3260/tcp
+    permanent: yes
+    state: enabled
+
+- name: Enable and start target service
+  service:
+    name: target
+    state: started
+    enabled: yes
+
+- name: Install NFS server
+  yum:
+    name: nfs-utils
+    state: present
+
+- name: Create shared website directory
+  file:
+    path: /var/www/html
+    state: directory
+    owner: apache
+    group: apache
+    mode: '0755'
+
+- name: Deploy dynamic PHP index page
+  template:
+    src: index.php.j2
+    dest: /var/www/html/index.php
+    owner: apache
+    group: apache
+    mode: '0644'
+
+- name: Configure NFS exports
+  lineinfile:
+    path: /etc/exports
+    line: "/var/www/html 192.168.2.0/24(rw,sync,no_root_squash)"
+    create: yes
+
+- name: Update NFS exports
+  command: exportfs -arv
+
+- name: Configure NFS firewall rules
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - nfs
+    - rpc-bind
+    - mountd
