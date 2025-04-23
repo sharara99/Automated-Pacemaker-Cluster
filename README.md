@@ -1,4 +1,4 @@
-# 🛠️ High Availability Web Cluster with Pacemaker, Corosync, Apache, iSCSI, and SBD
+# 🛠️ High Availability Web Cluster with Pacemaker
 
 
 ## 🧠 Architecture Diagram
