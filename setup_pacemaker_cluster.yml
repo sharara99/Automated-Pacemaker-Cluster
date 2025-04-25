@@ -2,5 +2,7 @@
 - name: Configure Pacemaker HA Cluster
   hosts: all_servers
   become: yes
-  roles:
-    - role: ./roles/pacemaker_cluster
+  tasks:
+    - import_tasks: tasks/common_tasks.yml
+    - import_tasks: tasks/cluster_setup.yml
+    - import_tasks: tasks/servera_tasks.yml
