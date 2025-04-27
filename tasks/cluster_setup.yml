@@ -26,6 +26,9 @@
     flags: [ lvm ]
     state: present
     part_end: 100%
+  when: inventory_hostname == 'servera' or inventory_hostname == 'serverc'
+  run_once: true
+
 
 - name: Create STONITH resource
   command: |
